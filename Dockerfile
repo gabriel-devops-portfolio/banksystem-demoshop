@@ -5,23 +5,23 @@ FROM mcr.microsoft.com/dotnet/sdk:3.1 AS build
 WORKDIR /src
 
 # Copy solution and csproj files for better restore caching
-COPY BankSystem.sln ./
+COPY src/DemoShop.sln ./
 
 # DemoShop projects
-COPY DemoShop/DemoShop.Models/DemoShop.Models.csproj DemoShop/DemoShop.Models/
-COPY DemoShop/DemoShop.Data/DemoShop.Data.csproj DemoShop/DemoShop.Data/
-COPY DemoShop/DemoShop.Services/DemoShop.Services.csproj DemoShop/DemoShop.Services/
-COPY DemoShop/DemoShop.Services.Models/DemoShop.Services.Models.csproj DemoShop/DemoShop.Services.Models/
-COPY DemoShop/DemoShop.Web/DemoShop.Web.csproj DemoShop/DemoShop.Web/
+COPY src/DemoShop.Models/*.csproj DemoShop.Models/
+COPY src/DemoShop.Data/*.csproj DemoShop.Data/
+COPY src/DemoShop.Services/*.csproj DemoShop.Services/
+COPY src/DemoShop.Services.Models/*.csproj DemoShop.Services.Models/
+COPY src/DemoShop.Web/*.csproj DemoShop.Web/
 
 # Restore dependencies
-RUN dotnet restore DemoShop/DemoShop.Web/DemoShop.Web.csproj
+RUN dotnet restore DemoShop.Web/DemoShop.Web.csproj
 
 # Copy all source code
-COPY . .
+COPY src/ .
 
 # Build and publish
-WORKDIR /src/DemoShop/DemoShop.Web
+WORKDIR /src/DemoShop.Web
 RUN dotnet publish -c Release -o /app/publish --no-restore
 
 # =========================
